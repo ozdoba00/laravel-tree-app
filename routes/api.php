@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\NodeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,4 +26,17 @@ Route::group([
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/user-profile', [AuthController::class, 'userProfile']);
+});
+
+Route::group([
+    'middleware'=> 'api',
+    'prefix' => "node"
+], function ($router){
+
+    Route::post('/add', [NodeController::class, 'store']);
+    Route::get('/get', [NodeController::class, 'index']);
+    Route::get('/get/{id}', [NodeController::class, 'show']);
+    Route::delete('/remove/{id}', [NodeController::class, 'destroy']);
+    Route::put('/edit/{id}', [NodeController::class, 'update']);
+
 });

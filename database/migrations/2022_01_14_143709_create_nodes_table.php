@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTreeTable extends Migration
+class CreateNodesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateTreeTable extends Migration
      */
     public function up()
     {
-        Schema::create('tree', function (Blueprint $table) {
+        Schema::create('nodes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->string('name');
             $table->boolean('is_node');
-            $table->foreign('parent_id')->references('id')->on('tree')->onDelete('cascade');
+            $table->foreign('parent_id')->references('id')->on('nodes')->onDelete('cascade');
         });
 
 
@@ -31,6 +31,6 @@ class CreateTreeTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tree');
+        Schema::dropIfExists('nodes');
     }
 }
