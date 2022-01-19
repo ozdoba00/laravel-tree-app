@@ -38,5 +38,6 @@ Route::group([
     Route::get('/get/{id}', [NodeController::class, 'show']);
     Route::delete('/remove/{id}', [NodeController::class, 'destroy']);
     Route::put('/edit/{id}', [NodeController::class, 'update']);
+    Route::put("/move/{id}", [NodeController::class, 'move']);
 
 });

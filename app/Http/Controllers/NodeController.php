@@ -19,22 +19,11 @@ class NodeController extends Controller
     public function index()
     {
         $nodes = Node::all();
+        $node = new Node();
 
         if(sizeof($nodes)> 0){
-        $children = [];
 
-
-
-        foreach ($nodes as &$item) {
-        $item->clicked = false;
-        $children[$item['parent_id']][] = &$item;
-        unset($item);
-        }
-
-        foreach ($nodes as &$item) if (isset($children[$item['id']]))
-            $item['children'] = $children[$item['id']];
-
-        return array_values($children)[0];
+           return $node->buildTree($nodes);
     }else{
         return ["message"=> "There is no any nodes"];
     }
@@ -67,7 +56,7 @@ class NodeController extends Controller
         $nodes = Node::all();
 
         $node->name = $request->name;
-        $node->is_node = true;
+        $node->is_node = $request->is_node;
 
         // Warunek jezeli dodawany wezel jest jako pierwszy w bazie
         if(!empty($nodes) && (!$request->id)){
@@ -92,9 +81,24 @@ class NodeController extends Controller
      */
     public function show($id)
     {
-        $node = Node::find($id);
+        $node = new Node();
+        $nodes = Node::all();
+        $nodesArr = [];
+        $parentId = Node::find($id)['parent_id'];
+        foreach ($nodes as $item){
 
-        return $node;
+        if($item['id']!=$id && $item['id']!=$parentId && $item['is_node'])
+            array_push($nodesArr, $item);
+        }
+
+
+        $children = $node->find_children($nodes, $id);
+
+        $subArr = array_diff($nodesArr, $children);
+
+
+        return $subArr;
+
     }
 
     /**
@@ -135,7 +139,11 @@ class NodeController extends Controller
         return Node::destroy($id);
     }
 
-    public function move($id){
+    public function move(Request $request, $id){
 
+        $node = Node::find($id);
+
+        $node->parent_id = $request->id;
+        $node->save();
     }
 }
