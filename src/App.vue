@@ -1,17 +1,13 @@
 <template>
   <div id="app">
-    
-    <h1>testing app</h1>
+    <div id="nav">
+      <!-- <router-link to="/">Home</router-link> -->
+      <!-- <router-link to="/signup">ASign</router-link> -->
+    </div>
+    <router-view/>
   </div>
 </template>
 
-<script>
+<style>
 
-
-export default {
-  name: 'App',
-  
-}
-</script>
-
-
+</style>
