@@ -29,7 +29,7 @@ Route::group([
 });
 
 Route::group([
-    'middleware'=> 'api',
+    'middleware'=> ['api'],
     'prefix' => "node"
 ], function ($router){
 

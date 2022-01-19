@@ -20,7 +20,28 @@ class NodeController extends Controller
     {
         $nodes = Node::all();
 
-        return $nodes;
+        if(sizeof($nodes)> 0){
+        $children = [];
+
+
+
+        foreach ($nodes as &$item) {
+        $item->clicked = false;
+        $children[$item['parent_id']][] = &$item;
+        unset($item);
+        }
+
+        foreach ($nodes as &$item) if (isset($children[$item['id']]))
+            $item['children'] = $children[$item['id']];
+
+        return array_values($children)[0];
+    }else{
+        return ["message"=> "There is no any nodes"];
+    }
+
+
+
+        // return typeOf($nodes);
     }
 
     /**
