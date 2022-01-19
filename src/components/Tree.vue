@@ -8,21 +8,25 @@
         v-if="i.clicked"> 
         
         <font-awesome-icon icon="chevron-down" /> 
-        {{i.name}}<button v-bind:id="i.id">+</button> <button class='delete' v-bind:id="i.id">-</button></p>
+        {{i.name}}<button class='addFolder' v-bind:id="i.id" v-if="i.is_node"><font-awesome-icon icon="folder" /></button>
+        <button class='addFile' v-bind:id="i.id" v-if="i.is_node"><font-awesome-icon icon="file" /></button>
+         <button class='delete' v-bind:id="i.id"><font-awesome-icon icon="minus" /></button></p>
 
         <p v-bind:id="i.id" 
         :class="i.children ? 'parent' : ''" 
         v-else-if="i.children"> 
         <font-awesome-icon icon="chevron-right" />
-         {{i.name}}<button v-bind:id="i.id">+</button> <button class='delete' v-bind:id="i.id">-</button></p>
+         {{i.name}}<button class='addFolder' v-bind:id="i.id" v-if="i.is_node"><font-awesome-icon icon="folder" /></button>
+         <button class='addFile' v-bind:id="i.id" v-if="i.is_node"><font-awesome-icon icon="file" /></button>
+          <button class='delete' v-bind:id="i.id"><font-awesome-icon icon="minus" /></button></p>
 
         <p v-bind:id="i.id" 
         :class="i.children ? 'parent' : ''" 
         v-else> 
-        {{i.name}} <button v-bind:id="i.id">+</button> <button class='delete' v-bind:id="i.id">-</button></p>
+        {{i.name}} <button class='addFolder' v-bind:id="i.id" v-if="i.is_node"><font-awesome-icon icon="folder" /></button>
+        <button class='addFile' v-bind:id="i.id" v-if="i.is_node"><font-awesome-icon icon="file" /></button>
+         <button class='delete' v-bind:id="i.id"><font-awesome-icon icon="minus" /></button></p>
 
-
-      
         
         <Tree :items="i.children" 
 
@@ -57,4 +61,5 @@ export default {
   .parent{
     color: red;
   }
+  
 </style>
