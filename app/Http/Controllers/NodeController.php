@@ -55,8 +55,19 @@ class NodeController extends Controller
 
         $nodes = Node::all();
 
+
         $node->name = $request->name;
         $node->is_node = $request->is_node;
+
+        $children = $node->find_children($nodes, $request->id);
+        foreach ($children as  $value) {
+            if($value['parent_id']==$request->id){
+            if($request->name==$value['name'] && $request->is_node==$value['is_node']){
+                return ['message'=> "chuja"];
+            }}
+
+        }
+
 
         // Warunek jezeli dodawany wezel jest jako pierwszy w bazie
         if(!empty($nodes) && (!$request->id)){
@@ -142,8 +153,19 @@ class NodeController extends Controller
     public function move(Request $request, $id){
 
         $node = Node::find($id);
-
+        $nodes = Node::all();
         $node->parent_id = $request->id;
+
+        $children = $node->find_children($nodes, $request->id);
+
+        foreach ($children as  $value) {
+            if($value['parent_id']==$node->parent_id){
+            if($node->name==$value['name'] && $node->is_node==$value['is_node']){
+                return ['message'=> "chuja"];
+            }}
+
+        }
+
         $node->save();
     }
 }

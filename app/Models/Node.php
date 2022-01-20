@@ -21,7 +21,7 @@ class Node extends Model
         foreach ($elements as $element) {
             $element->clicked = false;
 
-            if($element['is_node']==1){
+            // if($element['is_node']==1){
             if ($element['parent_id'] == $id ) {
 
                 array_push($branch, $element);
@@ -33,7 +33,7 @@ class Node extends Model
                 }
 
             }
-        }
+        // }
         }
         return $branch;
         // return $branch;
