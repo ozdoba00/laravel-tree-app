@@ -151,7 +151,8 @@ export default {
         this.addNewNode(event.target.id, 0);
       }else if(event.target.id && event.target.className == "edit"){
         this.editNode(event.target.id);
-
+      }else if(event.target.id && event.target.className == "sort"){
+        this.sortChildren([event.target.id]);
       }
    
     },
@@ -198,6 +199,36 @@ export default {
     })
     },
 
+    sortChildren: function(ids){
+       const idMap = this.nodeArr.reduce(function merge(map, node) {
+        map[node.id] = node;
+        
+        if (Array.isArray(node.children)) {
+          node.children.reduce(merge, map);
+        }
+        
+        return map;
+      }, {});
+
+      const items = ids.map(id => idMap[id]);
+      
+      items.forEach(item => {
+        if(item.children){
+          item.children.sort((a, b) => {
+          let fa = a.name.toLowerCase(),
+              fb = b.name.toLowerCase();
+
+          if (fa < fb) {
+              return -1;
+          }
+          if (fa > fb) {
+              return 1;
+          }
+          return 0;
+          })
+        }
+      });
+    },
     addNewNode: function(nodeId, isNode){
       let nodeName;
       if(isNode)

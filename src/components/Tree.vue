@@ -11,6 +11,7 @@
         {{i.name}}<button class='addFolder' v-bind:id="i.id" v-if="i.is_node"><font-awesome-icon icon="folder" /></button>
         <button class='addFile' v-bind:id="i.id" v-if="i.is_node"><font-awesome-icon icon="file" /></button>
         <button class='edit' v-bind:id="i.id"><font-awesome-icon icon="cog" /></button>
+        <button class="sort" v-bind:id="i.id"><font-awesome-icon icon="sort" /></button>
         <button class='delete' v-bind:id="i.id"><font-awesome-icon icon="minus" /></button></p>
 
         <p v-bind:id="i.id" 
@@ -20,6 +21,7 @@
          {{i.name}}<button class='addFolder' v-bind:id="i.id" v-if="i.is_node"><font-awesome-icon icon="folder" /></button>
         <button class='addFile' v-bind:id="i.id" v-if="i.is_node"><font-awesome-icon icon="file" /></button>
         <button class='edit' v-bind:id="i.id"><font-awesome-icon icon="cog" /></button>
+        <button class="sort" v-bind:id="i.id"><font-awesome-icon icon="sort" /></button>
         <button class='delete' v-bind:id="i.id"><font-awesome-icon icon="minus" /></button></p>
 
         <p v-bind:id="i.id" 
