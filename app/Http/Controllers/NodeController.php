@@ -23,14 +23,23 @@ class NodeController extends Controller
 
         if(sizeof($nodes)> 0){
 
-           return $node->buildTree($nodes);
+            return $node->buildTree($nodes, 0, false);
     }else{
         return ["message"=> "There is no any nodes"];
     }
 
+    }
 
+    public function indexClicked(){
+        $nodes = Node::all();
+        $node = new Node();
 
-        // return typeOf($nodes);
+        if(sizeof($nodes)> 0){
+
+            return ['tree'=>$node->buildTree($nodes, 0, true), 'list'=>$nodes];
+    }else{
+        return ["message"=> "There is no any nodes"];
+    }
     }
 
     /**
@@ -63,7 +72,7 @@ class NodeController extends Controller
         foreach ($children as  $value) {
             if($value['parent_id']==$request->id){
             if($request->name==$value['name'] && $request->is_node==$value['is_node']){
-                return ['message'=> "chuja"];
+                return ['message'=> "There is a node with that name!"];
             }}
 
         }
@@ -161,7 +170,7 @@ class NodeController extends Controller
         foreach ($children as  $value) {
             if($value['parent_id']==$node->parent_id){
             if($node->name==$value['name'] && $node->is_node==$value['is_node']){
-                return ['message'=> "chuja"];
+                return ['message'=> "There is a node with that name!"];
             }}
 
         }

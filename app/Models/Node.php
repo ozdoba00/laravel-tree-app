@@ -41,15 +41,21 @@ class Node extends Model
 
 
 
-    public function buildTree($elements, $parentId = 0) {
+    public function buildTree($elements, $parentId = 0, $clickedNode) {
         $branch = array();
 
         foreach ($elements as $element) {
-            $element->clicked = false;
+
+            if($element['is_node'])
+                $element->clicked = $clickedNode;
+            if(!$element['children'])
+                $element->clicked = false;
             if ($element['parent_id'] == $parentId) {
-                $children = $this->buildTree($elements, $element['id']);
+                $children = $this->buildTree($elements, $element['id'], $clickedNode);
                 if ($children) {
+
                     $element['children'] = $children;
+
                 }
                 $branch[] = $element;
             }

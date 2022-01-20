@@ -35,6 +35,7 @@ Route::group([
 
     Route::post('/add', [NodeController::class, 'store']);
     Route::get('/get', [NodeController::class, 'index']);
+    Route::get('/getClicked', [NodeController::class, 'indexClicked']);
     Route::get('/get/{id}', [NodeController::class, 'show']);
     Route::delete('/remove/{id}', [NodeController::class, 'destroy']);
     Route::put('/edit/{id}', [NodeController::class, 'update']);
