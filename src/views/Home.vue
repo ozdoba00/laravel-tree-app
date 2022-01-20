@@ -7,6 +7,9 @@
          <button class="addFolder" v-bind:id="0" v-on:click="select($event)">Add main folder</button>
          <button class="addFile" v-bind:id="0" v-on:click="select($event)">Add File</button>
          <br>
+          <button v-bind:id="0" v-on:click="expandNodes()">Rozwiń wszystko</button>
+          <button v-bind:id="0" v-on:click="collapseNodes()">Zwińwszystko</button>
+         <br>
          <label for="folderName">Zaznaczony folder</label>
          <input type="text" name="folderName" readonly v-model="message">
          <input type="hidden" name="folderId" v-model="selectedNodeId">
@@ -14,7 +17,7 @@
          <select name="nodeList" v-model="selectedOption" v-if="message">
            <option v-for="item of possibleMoves" :key="item.id" v-bind:value="item.id">{{item.name}}</option>
          </select>
-         <button  v-if="message" v-on:click="moveNode($event)">Przenieś</button>
+         <button  v-if="message" v-on:click="moveNode()">Przenieś</button>
          <Tree v-on:click.native="select($event)" :items="items"/>
 
         
@@ -39,30 +42,53 @@ export default {
     return{
       items: [],
       nodeArr: [],
+      nodesList: [],
       clickedItems: [],
       message: "",
       selectedNodeId: "",
       possibleMoves: [],
-      selectedOption: []
+      selectedOption: [],
+
     }
   },
   methods: {
 
-    moveNode: function(event){
-      console.log(event);
-      // console.log(this.selectedOption);
-      
+    
+    moveNode: function(){
+    
       axios.post('http://127.0.0.1:8001/api/node/move/'+this.selectedNodeId, {
         _method: "put",
         id: this.selectedOption
       })
           .then(function( response ){
-            console.log(response.data);
+            if(response.data.message){
+              alert(response.data.message);
+            }
               this.getData();
           }.bind(this));
     }, 
-    
-    setClickedElement: function(ids){
+    collapseNodes: function(){
+      this.clickedItems = [];
+      localStorage.setItem('clickedItems', '');
+      this.getData();
+    },
+    expandNodes: function(){
+          axios.get(`http://127.0.0.1:8001/api/node/getClicked`)
+        .then(response => {
+          
+         
+          const ids = [];
+          response.data.list.forEach(element => {
+            if(element.is_node && element.children)
+              ids.push(element.id);
+          });
+          
+          this.clickedItems = ids;
+          this.setClickedElement(ids, true);
+        })
+        },
+    setClickedElement: function(ids, clickAll = false){
+      
       const idMap = this.nodeArr.reduce(function merge(map, node) {
         map[node.id] = node;
         
@@ -77,8 +103,15 @@ export default {
       
       items.forEach(item => {
         
+        
+          
+    if(item)
         if(item.children){
-          if(!item.clicked){
+          if(clickAll && item.is_node){
+            item.clicked = true;
+          }
+
+          else if(!item.clicked){
             item.clicked = true;
             this.clickedItems.push(item.id);
           }
@@ -90,11 +123,12 @@ export default {
             }
           }
         }
+        
       });
  
- 
+    
     localStorage.setItem("clickedItems", this.clickedItems);
-    this.items = this.nodeArr;
+    
     },
     select: function(event){
       
@@ -106,6 +140,7 @@ export default {
         this.setClickedElement([event.target.id]);
       }
       else if(event.target.id && event.target.className == "addFolder" && event.target.tagName == "BUTTON"){
+        
        this.addNewNode(event.target.id, true);
       }
       else if(event.target.id && event.target.className == "delete"){
@@ -128,21 +163,18 @@ export default {
       
       axios.get(`http://127.0.0.1:8001/api/node/get`)
     .then(response => {
-      // console.log(response.data);
+      
       if(!response.data.message){
         
-        // console.log(response.data);
+     
       this.nodeArr = response.data;
+      this.items = this.nodeArr;
 
       
-      this.items = this.nodeArr;
+    
+      this.setClickedElement(localStorage.getItem('clickedItems').split(','));
+    
       
-      // console.log(this.nodeArr);
-     
-      this.clickedItems = [];
-      if(localStorage.getItem('clickedItems')){
-        this.setClickedElement(localStorage.getItem("clickedItems").split(","));
-      }
       }else{
         this.items = [];
         localStorage.setItem("clickedItems", '');
@@ -152,7 +184,12 @@ export default {
     },
 
     addNewNode: function(nodeId, isNode){
-      let nodeName = prompt("Wpisz nazwe wezla", "Folder");
+      let nodeName;
+      if(isNode)
+        nodeName = prompt("Wpisz nazwe folderu", "Folder");
+      else
+        nodeName = prompt("Wpisz nazwe pliku", "Plik");
+
       if(nodeName){
       if(nodeId == "0")
         nodeId = null;
@@ -164,7 +201,10 @@ export default {
         is_node: isNode
       })
           .then(function( response ){
-            console.log(response.data);
+            if(response.data.message){
+              alert(response.data.message);
+            }
+              console.log(this.clickedItems);
               this.getData();
           }.bind(this));
       }
@@ -176,8 +216,7 @@ export default {
       axios.post('http://127.0.0.1:8001/api/node/remove/'+nodeId, {
         _method: "delete"
       })
-          .then(function( response ){
-            console.log(response);
+          .then(function(){
               this.getData();
           }.bind(this));
     }
