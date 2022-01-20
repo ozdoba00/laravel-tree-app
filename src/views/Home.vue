@@ -4,12 +4,14 @@
     <div class="container">
       <div class="row">
        <div class="col-12">
-         <button class="addFolder" v-bind:id="0" v-on:click="select($event)">Add main folder</button>
-         <button class="addFile" v-bind:id="0" v-on:click="select($event)">Add File</button>
+         <div class="mainButtons">
+         <button class="addFolder" v-bind:id="0" v-on:click="select($event)">Dodaj folder (pulpit)</button>
+         <button class="addFile" v-bind:id="0" v-on:click="select($event)">Dodaj plik (pulpit)</button>
          <br>
           <button v-bind:id="0" v-on:click="expandNodes()">Rozwiń wszystko</button>
-          <button v-bind:id="0" v-on:click="collapseNodes()">Zwińwszystko</button>
+          <button v-bind:id="0" v-on:click="collapseNodes()">Zwiń wszystko</button>
          <br>
+         </div>
          <label for="folderName">Zaznaczony folder</label>
          <input type="text" name="folderName" readonly v-model="message">
          <input type="hidden" name="folderId" v-model="selectedNodeId">
@@ -30,7 +32,7 @@
 </template>
 
 <script>
-// @ is an alias to /src
+
 
 import axios from 'axios';
 import Tree from "../components/Tree.vue";
@@ -147,10 +149,28 @@ export default {
         this.removeNode(event.target.id);
       }else if(event.target.id && event.target.className == "addFile"){
         this.addNewNode(event.target.id, 0);
+      }else if(event.target.id && event.target.className == "edit"){
+        this.editNode(event.target.id);
+
       }
    
     },
+    editNode: function(nodeId){
 
+      let newName = prompt("Change name");
+      if(newName){
+      axios.post('http://127.0.0.1:8001/api/node/edit/'+nodeId, {
+        _method: "put",
+        name: newName
+      })
+          .then(function(response){
+            if(response.data.message){
+              alert(response.data.message);
+            }else
+              this.getData();
+          }.bind(this));
+      }
+    },
     getDataToMove: function(id){
       axios.get(`http://127.0.0.1:8001/api/node/get/`+id)
     .then(response => {
@@ -165,16 +185,11 @@ export default {
     .then(response => {
       
       if(!response.data.message){
-        
-     
-      this.nodeArr = response.data;
-      this.items = this.nodeArr;
+          this.nodeArr = response.data;
+          this.items = this.nodeArr;
 
-      
+          this.setClickedElement(localStorage.getItem('clickedItems').split(','));
     
-      this.setClickedElement(localStorage.getItem('clickedItems').split(','));
-    
-      
       }else{
         this.items = [];
         localStorage.setItem("clickedItems", '');
@@ -204,7 +219,7 @@ export default {
             if(response.data.message){
               alert(response.data.message);
             }
-              console.log(this.clickedItems);
+              
               this.getData();
           }.bind(this));
       }
@@ -244,4 +259,14 @@ export default {
  button > * {
   pointer-events: none;
 }
+
+.mainButtons button{
+  
+  max-width: 20%;
+  width:100%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+
 </style>
