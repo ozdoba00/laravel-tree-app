@@ -1,24 +1,27 @@
-# tree-front-app
+<h1>Simple tree managmenet app</h1>
 
-## Project setup
-```
-npm install
-```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
 
-### Compiles and minifies for production
-```
-npm run build
-```
 
-### Lints and fixes files
-```
-npm run lint
-```
+database_name: tree_management
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+<strong>backend:</strong><br>
+<i>
+$ git clone https://github.com/ozdoba00/laravel-tree-app.git <br>
+$ cd laravel-tree-app <br>
+$ composer i <br>
+$ php artisan serve
+</i>
+
+
+<strong>frontend:</strong> <br>
+<i>
+$ git clone -b front https://github.com/ozdoba00/laravel-tree-app.git <br>
+$ cd laravel-tree-app <br>
+$ npm i <br>
+$ npm run serve
+</i>
+
+
+
+<i><b>may contain bugs
