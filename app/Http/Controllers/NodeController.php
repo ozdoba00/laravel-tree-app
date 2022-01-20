@@ -142,9 +142,20 @@ class NodeController extends Controller
     public function update(StoreNode $request, $id)
     {
         $node = Node::find($id);
-
+        $nodes = Node::all();
 
         $node->name = $request->name;
+        $node->is_node = $node->is_node;
+
+        $children = $node->find_children($nodes, $node->parent_id);
+
+        foreach ($children as  $value) {
+            if($value['parent_id']==$node->parent_id){
+            if($node->name==$value['name'] && $node->is_node==$value['is_node']){
+                return ['message'=> "There is a node with that name!"];
+            }}
+
+        }
         $node->save();
     }
 
