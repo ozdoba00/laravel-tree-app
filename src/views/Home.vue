@@ -50,14 +50,14 @@ export default {
 
     moveNode: function(event){
       console.log(event);
-      console.log(this.selectedOption);
+      // console.log(this.selectedOption);
       
       axios.post('http://127.0.0.1:8001/api/node/move/'+this.selectedNodeId, {
         _method: "put",
         id: this.selectedOption
       })
           .then(function( response ){
-            console.log(response);
+            console.log(response.data);
               this.getData();
           }.bind(this));
     }, 
@@ -111,7 +111,7 @@ export default {
       else if(event.target.id && event.target.className == "delete"){
         this.removeNode(event.target.id);
       }else if(event.target.id && event.target.className == "addFile"){
-        this.addNewNode(event.target.id, false);
+        this.addNewNode(event.target.id, 0);
       }
    
     },
@@ -131,7 +131,7 @@ export default {
       // console.log(response.data);
       if(!response.data.message){
         
-        console.log(response.data);
+        // console.log(response.data);
       this.nodeArr = response.data;
 
       
@@ -153,18 +153,21 @@ export default {
 
     addNewNode: function(nodeId, isNode){
       let nodeName = prompt("Wpisz nazwe wezla", "Folder");
+      if(nodeName){
       if(nodeId == "0")
         nodeId = null;
+
+
       axios.post('http://127.0.0.1:8001/api/node/add', {
         name: nodeName,
         id: nodeId,
         is_node: isNode
       })
           .then(function( response ){
-            console.log(response);
+            console.log(response.data);
               this.getData();
           }.bind(this));
-      
+      }
 
     },
 
